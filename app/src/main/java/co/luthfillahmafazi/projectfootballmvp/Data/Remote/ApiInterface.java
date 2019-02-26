@@ -8,4 +8,8 @@ import retrofit2.http.Query;
 public interface ApiInterface {
     @GET("search_all_teams.php")
     Call<TeamResponse> getAllTeams(@Query("s") String s, @Query("c") String c);
+
+    // Endpoin Search
+    @GET("searchteams.php")
+    Call<TeamResponse> getSearchTeams(@Query("t") String t);
 }

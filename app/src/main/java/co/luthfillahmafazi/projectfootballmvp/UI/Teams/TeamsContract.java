@@ -15,6 +15,7 @@ public interface TeamsContract {
 
     interface Presenter{
         void getDataListTeams();
+        void getSearchTeams(String searchText);
     }
 
 
