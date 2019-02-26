@@ -8,7 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -46,6 +50,9 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
        // unbinder = ButterKnife.bind(this, view);
+
+        // jika kita menggunakn onOptionsMenuSelected maka cara menampilkan nya dengan cara :
+
         return view;
     }
 
@@ -59,6 +66,8 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rvFavorite = getView().findViewById(R.id.rv_favorite);
         swipeRefresh = getView().findViewById(R.id.swipe_refresh);
+        setHasOptionsMenu(true);
+
         favoritePresenter.getDataListTeams(getContext());
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,5 +98,27 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
     public void onDestroyView() {
         super.onDestroyView();
 //        unbinder.unbind();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        // Memasukan menu ke fragment
+        inflater.inflate(R.menu.search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                favoritePresenter.searchTeams(getContext(),s);
+                return true;
+            }
+        });
     }
 }
